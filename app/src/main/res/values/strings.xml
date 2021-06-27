@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">ToDo</string>
+    <string name="save">Сохранить</string>
+    <string name="task_hint">Что надо сделать…</string>
+    <string name="priority">Важность</string>
+    <string name="create_before">Сделать до</string>
+    <string name="delete">Удалить</string>
+    <string name="my_tasks">Мои дела</string>
+    <string-array name="priority_type">
+        <item>Нет</item>
+        <item>Низкий</item>
+        <item>&#8252; Высокий</item>
+    </string-array>
 </resources>

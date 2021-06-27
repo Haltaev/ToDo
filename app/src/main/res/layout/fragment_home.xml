@@ -11,17 +11,13 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@color/purple_200"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/purple_700"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="20dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -47,9 +43,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/anim_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:titleTextColor="@color/black"
+                android:layout_height="?attr/actionBarSize"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -65,5 +60,15 @@
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listItem="@layout/item_dessert" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/blue"
+        android:src="@drawable/ic_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

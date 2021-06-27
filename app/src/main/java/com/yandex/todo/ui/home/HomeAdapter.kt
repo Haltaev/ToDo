@@ -1,10 +1,8 @@
 package com.yandex.todo.ui.home
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +13,7 @@ import kotlinx.android.synthetic.main.item_task.view.*
 
 class HomeAdapter(
     private val items: ArrayList<Task>,
-    private val context: Context
+    private val callback: OnTaskClickListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -23,6 +21,9 @@ class HomeAdapter(
         val item = items[position]
         holder.itemView.apply {
             name.text = item.description
+            item_layout.setOnClickListener {
+                callback.onTaskClickListener(item)
+            }
         }
     }
 
@@ -51,10 +52,10 @@ class HomeAdapter(
     override fun getItemCount(): Int {
         return items.size
     }
+
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById(R.id.name)
         var viewBackground: RelativeLayout = view.findViewById(R.id.view_background)
-        var viewBackgroundGreen: RelativeLayout = view.findViewById(R.id.view_background_green)
         var viewForeground: RelativeLayout = view.findViewById(R.id.view_foreground)
     }
 

@@ -3,6 +3,7 @@ package com.yandex.todo.data.api.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "task")
 class Task(
@@ -18,4 +19,8 @@ class Task(
 
     @ColumnInfo(name = "priority")
     val priority: String
-)
+) : Serializable {
+    companion object {
+        const val TASK = "task"
+    }
+}

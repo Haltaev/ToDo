@@ -12,10 +12,19 @@ class MainActivity : AppCompatActivity() {
         openFragment(HomeFragment())
     }
 
-    private fun openFragment(fragment: Fragment, arguments: Bundle? = null) {
+    fun openFragment(fragment: Fragment, arguments: Bundle? = null) {
         fragment.arguments = arguments
         supportFragmentManager
             .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    fun openFragmentWithBackStack(fragment: Fragment, arguments: Bundle? = null) {
+        fragment.arguments = arguments
+        supportFragmentManager
+            .beginTransaction()
+            .addToBackStack(null)
             .replace(R.id.fragment_container, fragment)
             .commit()
     }

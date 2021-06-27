@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/item_layout"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
@@ -23,28 +24,11 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/view_background_green"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_row_background">
-
-        <ImageView
-            android:id="@+id/checked_icon"
-            android:layout_width="@dimen/ic_delete"
-            android:layout_height="@dimen/ic_delete"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/padd_10"
-            android:src="@drawable/ic_check" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/view_foreground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:padding="@dimen/padd_10">
+        android:padding="12dp">
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -71,6 +55,7 @@
             android:layout_marginEnd="8dp"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_info"
+            android:visibility="gone"
             android:textColor="@color/colorAccent"
             android:textStyle="bold" />
 
