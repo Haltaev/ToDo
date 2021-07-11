@@ -1,4 +1,4 @@
-package com.traidingviewer.di
+package com.yandex.todo.di
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

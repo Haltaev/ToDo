@@ -46,7 +46,7 @@ class NetworkModule {
     fun provideRestAdapter(okHttpClient: OkHttpClient): Retrofit {
         val builder = Retrofit.Builder()
         builder.client(okHttpClient)
-            .baseUrl("https://yandex.ru/")
+            .baseUrl("https://d5dps3h13rv6902lp5c8.apigw.yandexcloud.net")
             .addConverterFactory(GsonConverterFactory.create())
         return builder.build()
     }
