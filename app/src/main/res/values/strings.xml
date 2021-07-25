@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">ToDo</string>
+    <string name="save">Сохранить</string>
+    <string name="task_hint">Что надо сделать…</string>
+    <string name="without_name">(Без названия)</string>
+    <string name="priority">Важность</string>
+    <string name="create_before">Сделать до</string>
+    <string name="delete">Удалить</string>
+    <string name="my_tasks">Мои дела</string>
+    <string name="task_deleted">Задача удалена</string>
+    <string name="sure_to_delete_title">Вы уверены что хотите удалить задачу?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="notification_title_">Сегодня вам нужно сделать %d задач, не забудьте</string>
+    <string name="notification_title">На сегодня у Вас задач нет</string>
+    <string name="cancel">Отмена</string>
+    <string name="strikethrough_text"><s> %s </s></string>
+    <string-array name="priority_type">
+        <item>Нет</item>
+        <item>Низкий</item>
+        <item>&#8252; Высокий</item>
+    </string-array>
+
+    <string name="error_unknown_host">Ошибка интернет соедниния</string>
+    <string name="error_others">Ошибка загрузки, попробуйте позже</string>
 </resources>
