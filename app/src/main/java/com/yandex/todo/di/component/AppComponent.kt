@@ -1,28 +1,35 @@
 package com.yandex.todo.di.component
 
 import android.content.Context
-import com.yandex.todo.App
 import com.yandex.todo.di.module.*
+import com.yandex.todo.ui.addtask.AddEditTaskFragment
+import com.yandex.todo.ui.home.HomeFragment
+import com.yandex.todo.worker.NotifyWorker
+import com.yandex.todo.worker.SyncWorker
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [
         AppModule::class,
-        AndroidSupportInjectionModule::class,
         NetworkModule::class,
         HomeModule::class,
         AddEditTaskModule::class,
+        ViewModelModule::class,
+        ApplicationModuleBinds::class
     ]
 )
-interface AppComponent : AndroidInjector<App> {
+interface AppComponent {
 
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance applicationContext: Context): AppComponent
     }
+
+    fun inject(homeFragment: HomeFragment)
+    fun inject(addEditTaskFragment: AddEditTaskFragment)
+    fun inject(homeFragment: NotifyWorker)
+    fun inject(syncWorker: SyncWorker)
 }

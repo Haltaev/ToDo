@@ -11,10 +11,6 @@
         <action
             android:id="@+id/action_homeFragment_to_addEditTaskFragment"
             app:destination="@id/addEditTaskFragment" />
-        <argument
-            android:name="userMessage"
-            android:defaultValue="0"
-            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/addEditTaskFragment"

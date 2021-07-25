@@ -2,27 +2,14 @@ package com.yandex.todo.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.yandex.todo.data.api.model.task.Task
+import androidx.room.TypeConverters
+import com.yandex.todo.data.db.converter.DateConverter
+import com.yandex.todo.data.db.converter.ImportanceConverter
+import com.yandex.todo.data.model.task.TaskDaoEntity
 
-@Database(entities = [Task::class], version = 1, exportSchema = false)
+@Database(entities = [TaskDaoEntity::class], version = 1, exportSchema = false)
+@TypeConverters(ImportanceConverter::class, DateConverter::class)
 abstract class TasksDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TasksDao
-//
-//    companion object {
-//        @Volatile
-//        private var INSTANCE: TaskDatabase? = null
-//
-//        fun getDatabase(context: Context): TaskDatabase {
-//            return INSTANCE ?: synchronized(this) {
-//                val instance = Room.databaseBuilder(
-//                    context.applicationContext,
-//                    TaskDatabase::class.java,
-//                    "task_database"
-//                ).build()
-//                INSTANCE = instance
-//                instance
-//            }
-//        }
-//    }
 }

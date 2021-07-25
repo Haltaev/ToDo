@@ -2,10 +2,18 @@
     <string name="app_name">ToDo</string>
     <string name="save">Сохранить</string>
     <string name="task_hint">Что надо сделать…</string>
+    <string name="without_name">(Без названия)</string>
     <string name="priority">Важность</string>
     <string name="create_before">Сделать до</string>
     <string name="delete">Удалить</string>
     <string name="my_tasks">Мои дела</string>
+    <string name="task_deleted">Задача удалена</string>
+    <string name="sure_to_delete_title">Вы уверены что хотите удалить задачу?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="notification_title_">Сегодня вам нужно сделать %d задач, не забудьте</string>
+    <string name="notification_title">На сегодня у Вас задач нет</string>
+    <string name="cancel">Отмена</string>
     <string name="strikethrough_text"><s> %s </s></string>
     <string-array name="priority_type">
         <item>Нет</item>
@@ -13,47 +21,6 @@
         <item>&#8252; Высокий</item>
     </string-array>
 
-
-    <string name="add_task">New Task</string>
-    <string name="edit_task">Edit Task</string>
-    <string name="task_marked_complete">Task marked complete</string>
-    <string name="task_marked_active">Task marked active</string>
-    <string name="loading_tasks_error">Error while loading tasks</string>
-    <string name="completed_tasks_cleared">Completed tasks cleared</string>
-    <string name="menu_filter">Filter</string>
-    <string name="menu_clear">Clear completed</string>
-    <string name="menu_delete_task">Delete task</string>
-    <string name="navigation_view_header_title">Todo</string>
-    <string name="title_hint">Title</string>
-    <string name="description_hint">Enter your task here.</string>
-    <string name="empty_task_message">TO DOs cannot be empty</string>
-    <string name="successfully_saved_task_message">Task saved</string>
-    <string name="list_title">Task List</string>
-    <string name="statistics_title">Statistics</string>
-    <string name="statistics_no_tasks">You have no tasks.</string>
-    <string name="statistics_active_tasks">Active tasks: %.1f%%</string>
-    <string name="statistics_completed_tasks">Completed tasks: %.1f%%</string>
-    <string name="statistics_error">Error loading statistics.</string>
-    <string name="no_data">No data</string>
-    <string name="loading">LOADING</string>
-
-    <string-array name="list_tasks_array">
-        <item>@string/nav_all</item>
-        <item>@string/nav_active</item>
-        <item>@string/nav_completed</item>
-    </string-array>
-    <string name="nav_all">All</string>
-    <string name="nav_active">Active</string>
-    <string name="nav_completed">Completed</string>
-    <string name="label_all">All Tasks</string>
-    <string name="label_active">Active Tasks</string>
-    <string name="label_completed">Completed Tasks</string>
-    <string name="no_tasks_all">You have no tasks!</string>
-    <string name="no_tasks_active">You have no active tasks!</string>
-    <string name="no_tasks_completed">You have no completed tasks!</string>
-    <string name="refresh">Refresh</string>
-    <string name="successfully_deleted_task_message">Task was deleted</string>
-    <string name="successfully_added_task_message">Task added</string>
-    <string name="no_data_description" />
-
+    <string name="error_unknown_host">Ошибка интернет соедниния</string>
+    <string name="error_others">Ошибка загрузки, попробуйте позже</string>
 </resources>

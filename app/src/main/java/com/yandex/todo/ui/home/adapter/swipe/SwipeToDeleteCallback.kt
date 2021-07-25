@@ -15,7 +15,7 @@ abstract class SwipeToDeleteCallback(context: Context) :
     private val intrinsicWidth = deleteIcon?.intrinsicWidth
     private val intrinsicHeight = deleteIcon?.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#FF3B30")
+    private val backgroundColor = context.resources.getColor(R.color.red_delete, null)
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
     override fun onMove(

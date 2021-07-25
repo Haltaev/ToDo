@@ -1,172 +1,149 @@
 package com.yandex.todo.ui.home
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.yandex.todo.EventObserver
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.yandex.todo.App
 import com.yandex.todo.R
-import com.yandex.todo.data.api.model.task.Importance
-import com.yandex.todo.data.api.model.task.Task
+import com.yandex.todo.data.model.task.Task
 import com.yandex.todo.databinding.FragmentHomeBinding
 import com.yandex.todo.ui.home.adapter.HomeAdapter
-import dagger.android.support.DaggerFragment
+import com.yandex.todo.ui.home.adapter.swipe.SwipeToDeleteCallback
+import com.yandex.todo.ui.home.adapter.swipe.SwipeToDoneCallback
+import com.yandex.todo.util.observe
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
-class HomeFragment : DaggerFragment() {
+class HomeFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var binding: FragmentHomeBinding
-
-    private lateinit var adapter: HomeAdapter
-
     private val viewModel by viewModels<HomeViewModel> { viewModelFactory }
 
-    private val args: HomeFragmentArgs by navArgs()
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var adapter: HomeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
-            viewmodel = viewModel
-        }
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity?.application as App).getComponent().inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this.viewLifecycleOwner
-        setupNavigation()
         setupListAdapter()
-        setToolbar()
-        viewModel.loadTasks(true)
-//        setAdapter()
-//        binding.floatingActionButton.setOnClickListener {
-//            (activity as MainActivity).openFragmentWithBackStack(addEditTaskFragment())
-//        }
-//        val task = TaskModel("0", "Задача №5", Importance.BASIC, false, 0, 0, 0)
-//        val task2 = TaskModel("0", "Задача №5", Importance.BASIC, false, 0, 0, 0)
-//        Log.e("test", (task == task).toString())
-//        Log.e("test", (task == task2).toString())
-    }
 
-    private fun setupNavigation() {
-        viewModel.openTaskEvent.observe(viewLifecycleOwner, EventObserver {
-            openTaskDetails(it)
-        })
-        viewModel.newTaskEvent.observe(viewLifecycleOwner, EventObserver {
-            navigateToAddNewTask()
-        })
-    }
+        setFilterButtonOptions()
 
-    private fun navigateToAddNewTask() {
-        val action = HomeFragmentDirections
-            .actionHomeFragmentToAddEditTaskFragment(null)
-        findNavController().navigate(action)
-    }
+        binding.floatingActionButton.setOnClickListener { openTaskDetails() }
 
-    private fun openTaskDetails(taskId: String) {
-        val action = HomeFragmentDirections.actionHomeFragmentToAddEditTaskFragment(taskId)
-        findNavController().navigate(action)
+        binding.animToolbar.setOnClickListener { binding.mainRecyclerView.smoothScrollToPosition(0) }
+
+        binding.swipeToRefreshLayout.setOnRefreshListener {
+            binding.swipeToRefreshLayout.isRefreshing = true
+            viewModel.downloadTasks()
+        }
+
+        observe(viewModel.itemsMediatorLiveData) {
+            if (it.isNotEmpty()) {
+                adapter.currentDate = Date()
+                adapter.submitList(it)
+            }
+        }
+
+        observe(viewModel.removedTask) {
+            if (it != null) showSnackBarForCancel()
+        }
+
+        observe(viewModel.downloadState) {
+            binding.swipeToRefreshLayout.isRefreshing = false
+            if (it != 0) {
+                Toast.makeText(
+                    requireContext(),
+                    requireContext().resources.getString(it),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun setupListAdapter() {
-        val viewModel = binding.viewmodel
-        if (viewModel != null) {
-            adapter = HomeAdapter(viewModel)
-            binding.homeList.adapter = adapter
+        val onTaskClickListener: (Task) -> Unit = { openTaskDetails(it.id) }
+        val onStateChangeListener: (Int) -> Unit = { viewModel.changeTaskState(it) }
+
+        adapter = HomeAdapter(onTaskClickListener, onStateChangeListener)
+        binding.mainRecyclerView.adapter = adapter
+        setSwipeHandlers()
+    }
+
+    private fun setFilterButtonOptions() {
+        binding.filterButton.setOnClickListener {
+            viewModel.saveLastChanges()
+            viewModel.changeFilterState()
+        }
+        observe(viewModel.currentFiltering) {
+            binding.filterButton.isActivated = it
+            viewModel.getTasks()
         }
     }
 
-//
-    private fun setToolbar() {
-        binding.animToolbar.apply {
-            setTitle(R.string.my_tasks)
-            setTitleTextColor(Color.BLACK)
-            (activity as? AppCompatActivity)?.setSupportActionBar(this)
-        }
+    private fun openTaskDetails(taskId: String? = null) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToAddEditTaskFragment(taskId)
+        )
     }
-//
-//    private fun setAdapter() {
-//        binding.homeList.apply {
-//            val mLayoutManager = LinearLayoutManager(requireContext())
-//            layoutManager = mLayoutManager
-//            itemAnimator = DefaultItemAnimator()
-//            addItemDecoration(
-//                DividerItemDecoration(
-//                    requireContext(),
-//                    DividerItemDecoration.VERTICAL,
-//                )
-//            )
-//            adapter = this@HomeFragment.adapter
-//            val swipeLestHandler = object : SwipeToDeleteCallback(requireContext()) {
-//                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                    val id = this@HomeFragment.adapter.getItem(viewHolder.adapterPosition).id
-////                    viewModel.removeTask(id)
-//                }
-//            }
-//
-//            val swipeRightHandler = object : SwipeToDoneCallback(requireContext()) {
-//                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                    val id = this@HomeFragment.adapter.getItem(viewHolder.adapterPosition).id
-//                    val isDone = this@HomeFragment.adapter.getItem(viewHolder.adapterPosition).done
-////                    viewModel.setTaskDone(isDone.not(), id)
-//                }
-//            }
-//
-//            val itemTouch = ItemTouchHelper(swipeLestHandler)
-//            val itemTouch2 = ItemTouchHelper(swipeRightHandler)
-//            itemTouch2.attachToRecyclerView(this)
-//            itemTouch.attachToRecyclerView(this)
-//        }
-//    }
 
-//    fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-//        if (viewHolder is HomeAdapter.MyViewHolder) {
-//            viewHolder.adapterPosition.let {
-//                val id: String = array[it].id
-//                val deletedItem: Task = array[it]
-//                val deletedIndex = it
-//                adapter.removeItem(it)
-//                val snackbar = Snackbar
-//                    .make(binding.root, "Визуальное удаление Задачи №$id", Snackbar.LENGTH_LONG)
-//                snackbar.setAction("Отменить") {
-//                    adapter.restoreItem(deletedItem, deletedIndex)
-//                }
-//                snackbar.setActionTextColor(resources.getColor(R.color.blue, null))
-//                snackbar.show()
-//            }
-//        }
-//    }
+    private fun setSwipeHandlers() {
+        val swipeLeftHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.markAsDelete(viewHolder.adapterPosition)
+            }
+        }
 
-//    override fun onTaskClickListener(task: Task) {
-//        val arguments = Bundle()
-//        arguments.putSerializable(TaskModel.TASK, task)
-//        (activity as MainActivity).openFragmentWithBackStack(AddTaskFragment(), arguments)
-//    }
+        val swipeRightHandler = object : SwipeToDoneCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.changeTaskState(viewHolder.adapterPosition)
+            }
+        }
+        val itemTouch = ItemTouchHelper(swipeLeftHandler)
+        val itemTouch2 = ItemTouchHelper(swipeRightHandler)
+        itemTouch2.attachToRecyclerView(binding.mainRecyclerView)
+        itemTouch.attachToRecyclerView(binding.mainRecyclerView)
+    }
 
-//    override fun onCheckBoxChangeStateListener(position: Int, done: Boolean) {
-//        val oldList = adapter.getData()
-//        val changedItem = oldList[position].copy(done = done)
-//        val newList = arrayListOf<Task>()
-//        newList.addAll(oldList)
-//        newList[position] = changedItem
-//        val homeDiffUtilCallback = HomeDiffUtilCallback(oldList, newList)
-//        val homeDiffResult = DiffUtil.calculateDiff(homeDiffUtilCallback)
-//        adapter.setData(newList)
-//        homeDiffResult.dispatchUpdatesTo(adapter)
-//    }
+    private fun showSnackBarForCancel() {
+        Snackbar
+            .make(binding.root, getString(R.string.task_deleted), Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.cancel)) {
+                viewModel.cancelDelete()
+            }
+            .setActionTextColor(requireContext().resources.getColor(R.color.blue, null))
+            .show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.saveLastChanges()
+        _binding = null
+    }
 }

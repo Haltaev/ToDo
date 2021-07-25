@@ -1,7 +1,10 @@
 package com.yandex.todo.ui.home.adapter.swipe
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.ColorDrawable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,7 +18,7 @@ abstract class SwipeToDoneCallback(context: Context) :
     private val intrinsicWidth = doneIcon?.intrinsicWidth
     private val intrinsicHeight = doneIcon?.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#34C759")
+    private val backgroundColor = context.resources.getColor(R.color.bg_green_background, null)
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
     override fun onMove(
