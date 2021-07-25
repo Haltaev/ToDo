@@ -123,9 +123,14 @@ class TasksRepositoryImpl @Inject constructor(
                         localTasksMap[localTask.id] = localTask
                     }
                     body.forEach { bodyItem ->
-                        if (localTasksMap[bodyItem.id] != null) {
+                        val item = localTasksMap[bodyItem.id]
+                        if (item == null) {
                             tasksDao.insertTask(
                                 bodyItem.mapToDaoEntity().copy(isDirty = false)
+                            )
+                        } else {
+                            tasksDao.insertTask(
+                                item.copy(isDirty = false)
                             )
                         }
                     }
